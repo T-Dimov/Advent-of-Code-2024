@@ -7,7 +7,7 @@
 #include <numeric>
 #include <functional>
 
-int getListsDistance( std::string_view fileName )
+int getListsDistance(std::string_view fileName)
 {
 	std::ifstream		input { fileName.data() };
 
@@ -34,7 +34,7 @@ int getListsDistance( std::string_view fileName )
 	return std::ranges::fold_left_first( std::views::zip_transform( diff, left, right ), std::plus {} ).value();
 }
 
-int getListsSimilarityScore( std::string_view fileName )
+int getListsSimilarityScore(std::string_view fileName)
 {
 	std::ifstream					input { fileName.data() };
 
