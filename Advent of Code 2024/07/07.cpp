@@ -21,7 +21,7 @@ static std::vector<Equation> readEquations(std::string_view fileName)
 
 static Equation::Operand calculateTotalCalibrationResult(const std::vector<Equation>& equations, bool allowConcat)
 {
-	return std::ranges::fold_left_first( equations | std::views::transform( std::bind_back( std::mem_fn( &Equation::getPossibleResult ), allowConcat ) ), std::plus {} ).value();
+	return std::ranges::fold_left_first( equations | std::views::transform( std::bind_back( &Equation::getPossibleResult, allowConcat ) ), std::plus {} ).value();
 }
 
 int main()

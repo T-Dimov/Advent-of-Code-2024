@@ -7,15 +7,15 @@ static int tenToThePowerOfNumDigits(Equation::Operand number)
 	if ( number == 0 )
 		return 10;
 
-	int	digits	{ 1 };
+	int	result	{ 1 };
 
 	while ( number )
 	{
-		digits	*= 10;
+		result	*= 10;
 		number	/= 10;
 	}
 
-	return digits;
+	return result;
 }
 
 static Equation::Operand cc(Equation::Operand lhs, Equation::Operand rhs)
