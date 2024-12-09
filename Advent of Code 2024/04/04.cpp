@@ -35,7 +35,7 @@ Enum operator&=(Enum& lhs, Enum rhs)
 }
 
 template<IsEnum Enum>
-bool operator%(Enum& lhs, Enum rhs)
+bool operator%(Enum lhs, Enum rhs)
 {
 	return ( lhs & rhs ) == rhs;
 }
