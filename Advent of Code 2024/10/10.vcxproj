@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a6331231-7547-4e84-9d77-dd16a18dd66b}</ProjectGuid>
-    <RootNamespace>My03</RootNamespace>
+    <ProjectGuid>{2ad07a1e-6e35-4737-8a82-725ccd28c4ee}</ProjectGuid>
+    <RootNamespace>My10</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -129,7 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="03.cpp" />
+    <ClCompile Include="10.cpp" />
+    <ClCompile Include="topoMap.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="topoMap.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />
