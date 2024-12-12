@@ -10,21 +10,6 @@ using	Map		= std::vector<std::string>;
 using	Visited	= std::vector<std::vector<bool>>;
 using	Regions	= std::unordered_map<uint16_t, std::vector<uint8_t>>;
 
-namespace Direction
-{
-	constexpr const std::byte	None	{ 0b0000'0000 };
-
-	constexpr const std::byte	U		{ 0b0000'0001 };
-	constexpr const std::byte	R		{ 0b0000'0010 };
-	constexpr const std::byte	D		{ 0b0000'0100 };
-	constexpr const std::byte	L		{ 0b0000'1000 };
-
-	inline bool operator%(std::byte lhs, std::byte rhs)
-	{
-		return ( lhs & rhs ) == rhs;
-	}
-};
-
 static Map readMap(std::string_view fileName)
 {
 	std::ifstream	input	{ fileName.data() };
@@ -38,10 +23,8 @@ static Map readMap(std::string_view fileName)
 	return map;
 }
 
-static void exploreRegion(size_t i, size_t j, std::byte cameFrom, const Map& map, Visited& visited, std::vector<uint8_t>& regionPlotFences, std::vector<uint8_t>& regionSideFences)
+static void exploreRegion(size_t i, size_t j, const Map& map, Visited& visited, std::vector<uint8_t>& regionPlotFences, std::vector<uint8_t>& regionSideFences)
 {
-	using namespace Direction;
-
 	visited[ i ][ j ]	= true;
 
 	const char	type		{ map[ i ][ j ] };
@@ -56,22 +39,22 @@ static void exploreRegion(size_t i, size_t j, std::byte cameFrom, const Map& map
 	if ( hasFenceTop )
 		fenceCount++;
 	else if ( !visited[ i - 1 ][ j ] )
-		exploreRegion( i - 1, j, D, map, visited, regionPlotFences, regionSideFences );
+		exploreRegion( i - 1, j, map, visited, regionPlotFences, regionSideFences );
 
 	if ( hasFenceBot )
 		fenceCount++;
 	else if ( !visited[ i + 1 ][ j ] )
-		exploreRegion( i + 1, j, U, map, visited, regionPlotFences, regionSideFences );
+		exploreRegion( i + 1, j, map, visited, regionPlotFences, regionSideFences );
 
 	if ( hasFenceLft )
 		fenceCount++;
 	else if ( !visited[ i ][ j - 1 ] )
-		exploreRegion( i, j - 1, R, map, visited, regionPlotFences, regionSideFences );
+		exploreRegion( i, j - 1, map, visited, regionPlotFences, regionSideFences );
 
 	if ( hasFenceRgt )
 		fenceCount++;
 	else if ( !visited[ i ][ j + 1 ] )
-		exploreRegion( i, j + 1, L, map, visited, regionPlotFences, regionSideFences );
+		exploreRegion( i, j + 1, map, visited, regionPlotFences, regionSideFences );
 
 	regionPlotFences.push_back( fenceCount );
 
@@ -125,7 +108,7 @@ static std::pair<size_t, size_t> calculateFencingPrice(const Map& map)
 		{
 			if ( !visited[ i ][ j ] )
 			{
-				exploreRegion( i, j, Direction::None, map, visited, regionsPlotFences[ regionID ], regionsSideFences[ regionID ] );
+				exploreRegion( i, j, map, visited, regionsPlotFences[ regionID ], regionsSideFences[ regionID ] );
 				++regionID;
 			}
 		}
