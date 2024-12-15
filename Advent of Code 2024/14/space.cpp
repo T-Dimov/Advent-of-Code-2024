@@ -92,9 +92,9 @@ void Space::showAllGrids()
 
 void Space::printGrid() const
 {
-	for ( int j = 0; j < fSize.fX; j++ )
+	for ( int i = 0; i < fSize.fY; i++ )
 	{
-		for ( int i = 0; i < fSize.fY; i++ )
+		for ( int j = 0; j < fSize.fX; j++ )
 			if ( const size_t& count { fRobotGrid[ i ][ j ] }; count == 0 )
 				std::cout << ' ';
 			else
