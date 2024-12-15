@@ -45,7 +45,8 @@ Map::Map(std::string_view fileName, bool wide)
 			}
 		}
 
-		fSize.fX	*= 2;
+		fSize.fX			*= 2;
+		fRobotPosition.fX	*= 2;
 	}
 }
 
@@ -60,12 +61,38 @@ void Map::print() const
 
 		std::cout << '\n';
 	}
+
+	std::cout << '\n';
 }
 
-void Map::moveRobot()
+void Map::moveRobot(bool printEachStep)
 {
+	this->print();
+
+	size_t	iter	{ 0 };
+
 	for ( auto instr : fInstructions )
+	{
+		++iter;
+
+		if ( printEachStep )
+			std::cout << std::format( "{} ({})\n", instr, iter );
+
 		this->moveOnce( instr );
+
+		if ( printEachStep )
+			this->print();
+
+		if ( this->hasBrokenBox() )
+		{
+			std::cout << std::format( "{} ({}) broke a box!\n", instr, iter );
+			if ( !printEachStep )
+				this->print();
+		}
+	}
+
+	if ( !printEachStep )
+		this->print();
 }
 
 size_t Map::calculateSumOfBoxCoordinates() const
@@ -84,53 +111,50 @@ size_t Map::calculateSumOfBoxCoordinates() const
 	return sum;
 }
 
-void Map::readInstructions(std::string_view line)
-{
-	using namespace Direction;
-
-	for ( char instr : line )
-	{
-		if ( instr == '^' )
-			fInstructions.push_back( U );
-
-		if ( instr == 'v' )
-			fInstructions.push_back( D );
-
-		if ( instr == '<' )
-			fInstructions.push_back( L );
-
-		if ( instr == '>' )
-			fInstructions.push_back( R );
-	}
-}
-
 /*static*/ bool Map::isBox(char cell, bool allowRightHalf /*= true*/)
 {
 	return cell == 'O' || cell == '[' || allowRightHalf && cell == ']';
 }
 
-void Map::moveOnce(std::byte dir)
+bool Map::hasBrokenBox() const
 {
-	using namespace Direction;
+	for ( size_t i = 0; i < fSize.fY; i++ )
+	{
+		const auto& line { fMap[ i ] };
 
+		for ( size_t j = 0; j < fSize.fX; j++ )
+			if ( line[ j ] == '[' && line[ j + 1 ] != ']' )
+				return true;
+	}
+
+	return false;
+}
+
+void Map::readInstructions(std::string_view line)
+{
+	fInstructions.insert_range( fInstructions.end(), line );
+}
+
+void Map::moveOnce(char dir)
+{
 	switch ( dir )
 	{
-		case U:
+		case '^':
 		{
 			this->moveU();
 			break;
 		}
-		case D:
+		case 'v':
 		{
 			this->moveD();
 			break;
 		}
-		case L:
+		case '<':
 		{
 			this->moveL();
 			break;
 		}
-		case R:
+		case '>':
 		{
 			this->moveR();
 			break;
@@ -152,13 +176,18 @@ void Map::moveU()
 		return;
 
 	// cell is a box
-	i	= this->searchU( i );
+	if ( fIsWide )
+		this->searchAndPushWide( i, -1 );
+	else
+	{
+		i	= this->searchU( i );
 
-	if ( fMap[ i ][ fRobotPosition.fX ] == '#' )
-		return;
+		if ( fMap[ i ][ fRobotPosition.fX ] == '#' )
+			return;
 
-	// cell is empty, push the boxes
-	this->pushU( i );
+		// cell is empty, push the boxes
+		this->pushU( i );
+	}
 }
 
 void Map::moveD()
@@ -175,13 +204,18 @@ void Map::moveD()
 		return;
 
 	// cell is a box
-	i	= this->searchD( i );
+	if ( fIsWide )
+		this->searchAndPushWide( i, 1 );
+	else
+	{
+		i	= this->searchD( i );
 
-	if ( fMap[ i ][ fRobotPosition.fX ] == '#' )
-		return;
+		if ( fMap[ i ][ fRobotPosition.fX ] == '#' )
+			return;
 
-	// cell is empty, push the boxes
-	this->pushD( i );
+		// cell is empty, push the boxes
+		this->pushD( i );
+	}
 }
 
 void Map::moveL()
@@ -324,4 +358,81 @@ void Map::pushR(size_t j)
 	}
 	fMap[ fRobotPosition.fY ][ j ]	= '.';
 	++fRobotPosition.fX;
+}
+
+void Map::searchAndPushWide(size_t i, int dir)
+{
+	WideBox	box	{ i, fRobotPosition.fX, *this };
+	box.propagate( dir );
+
+	if ( box.canMove( dir ) )
+	{
+		box.move( dir, fMap );
+
+		std::swap( fMap[ fRobotPosition.fY + dir ][ fRobotPosition.fX ], fMap[ fRobotPosition.fY ][ fRobotPosition.fX ] );
+		fRobotPosition.fY	+= dir;
+	}
+}
+
+
+Map::WideBox::WideBox(size_t row, size_t col, const Map& map)
+	: fRow( row )
+	, fMap( map )
+{
+	if ( char cell { fMap.fMap[ fRow ][ col ] }; cell == '[' )
+	{
+		fLeft	= col;
+		fRight	= col + 1;
+	}
+	else
+	{
+		fLeft	= col - 1;
+		fRight	= col;
+	}
+}
+
+void Map::WideBox::propagate(int dir)
+{
+	const size_t	nextRow	{ fRow + dir };
+	const auto&		row		{ fMap.fMap[ nextRow ] };
+
+	if ( Map::isBox( row[ fLeft ] ) )
+	{
+		fLeftBox	= std::make_unique<WideBox>( nextRow, fLeft, fMap );
+		fLeftBox->propagate( dir );
+	}
+
+	if ( char cell { row[ fRight ] }; cell == '[' )
+	{
+		fRightBox	= std::make_unique<WideBox>( nextRow, fRight, fMap );
+		fRightBox->propagate( dir );
+	}
+	else if ( cell == ']' ) // left and right shouldn't be the same child
+		fRightIsLeft	= true;
+
+	// left and right shouldn't have the same child
+	if ( fLeftBox && fRightBox && fLeftBox->fRightBox && fRightBox->fLeftBox )
+	{
+		fRightBox->fLeftBox.reset();
+		fRightBox->fLeftIsFree	= true;
+	}
+}
+
+bool Map::WideBox::canMove(int dir)
+{
+	const bool	canMoveLeft		{ fLeftBox ? fLeftBox->canMove( dir ) : fLeftIsFree || fMap.fMap[ fRow + dir ][ fLeft ] == '.' };
+	const bool	canMoveRight	{ fRightBox ? fRightBox->canMove( dir ) : fRightIsLeft || fMap.fMap[ fRow + dir ][ fRight ] == '.' };
+
+	return canMoveLeft && canMoveRight;
+}
+
+void Map::WideBox::move(int dir, std::vector<std::string>& map)
+{
+	if ( fLeftBox )		fLeftBox->move( dir, map );
+	if ( fRightBox )	fRightBox->move( dir, map );
+
+	std::swap( map[ fRow + dir ][ fLeft ]	, map[ fRow ][ fLeft ]	);
+	std::swap( map[ fRow + dir ][ fRight ]	, map[ fRow ][ fRight ]	);
+
+	fRow	+= dir;
 }

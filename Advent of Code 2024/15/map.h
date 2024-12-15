@@ -5,21 +5,7 @@
 #include <string_view>
 #include <vector>
 #include <string>
-
-namespace Direction
-{
-	constexpr const std::byte	None	{ 0b0000'0000 };
-
-	constexpr const std::byte	U		{ 0b0000'0001 };
-	constexpr const std::byte	R		{ 0b0000'0010 };
-	constexpr const std::byte	D		{ 0b0000'0100 };
-	constexpr const std::byte	L		{ 0b0000'1000 };
-
-	inline bool operator%(std::byte lhs, std::byte rhs)
-	{
-		return ( lhs & rhs ) == rhs;
-	}
-};
+#include <memory>
 
 class Map
 {
@@ -28,15 +14,17 @@ public:
 
 	void		print() const;
 
-	void		moveRobot();
+	void		moveRobot(bool printEachStep);
 	size_t		calculateSumOfBoxCoordinates() const;
-
-private:
-	void		readInstructions(std::string_view line);
 
 	static bool	isBox(char cell, bool allowRightHalf = true);
 
-	void		moveOnce(std::byte dir);
+private:
+	bool		hasBrokenBox() const;
+
+	void		readInstructions(std::string_view line);
+
+	void		moveOnce(char dir);
 	void		moveU();
 	void		moveD();
 	void		moveL();
@@ -52,12 +40,38 @@ private:
 	void		pushL(size_t j);
 	void		pushR(size_t j);
 
+	void		searchAndPushWide(size_t i, int dir);
+
 	std::vector<std::string>	fMap;
 	Point2D						fSize;
 	bool						fIsWide			{ false };
 
 	Point2D						fRobotPosition;
 
-	std::vector<std::byte>		fInstructions;
+	std::vector<char>			fInstructions;
+
+
+	class WideBox
+	{
+	public:
+		WideBox(size_t row, size_t col, const Map& map);
+
+		void	propagate(int dir);
+		bool	canMove(int dir);
+		void	move(int dir, std::vector<std::string>& map);
+
+	private:
+
+		size_t						fRow			{ 0 };
+		size_t						fLeft			{ 0 };
+		size_t						fRight			{ 0 };
+
+		std::unique_ptr<WideBox>	fLeftBox;
+		std::unique_ptr<WideBox>	fRightBox;
+		bool						fLeftIsFree		{ false };
+		bool						fRightIsLeft	{ false };
+
+		const Map&					fMap;
+	};
 };
 
