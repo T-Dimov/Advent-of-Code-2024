@@ -38,7 +38,9 @@ size_t Maze::findLowestCostRoute() const
 	std::priority_queue<State, std::vector<State>, std::greater<State>>	queue;
 	std::unordered_map<Point2D, std::unordered_map<std::byte, int>>		dist;
 
-	queue.emplace( fStart, Direction::R, 0, Maze::heuristic( fStart, fEnd, Direction::R ) );
+	Visited	startVisited( this->getVisitedVectorSize() );
+	startVisited[ this->getVisitedVectorIndex( fStart ) ]	= true;
+	queue.emplace( fStart, Direction::R, 0, this->heuristic( fStart, Direction::R ), startVisited );
 	dist[ fStart ][ Direction::R ]	= 0;
 
 	while ( !queue.empty() )
@@ -47,25 +49,34 @@ size_t Maze::findLowestCostRoute() const
 		queue.pop();
 
 		if ( current.fPos == fEnd )
-			return current.fCost;
+		{
+			Maze::addNewVisited( fVisitedCells[ current.fCost ], current.fVisitedCells );
+			continue;
+		}
 
 		const States	neighbours	{ this->getPossibleNeighbours( current ) };
 
-		for ( const auto& [newPos, newDir, addCost, heuristic] : neighbours )
+		for ( const auto& [newPos, newDir, addCost, heuristic, _] : neighbours )
 		{
 			const int	newCost			{ current.fCost + addCost };
-			const int	newHeuristic	{ Maze::heuristic( newPos, fEnd, newDir ) };
+			const int	newHeuristic	{ this->heuristic( newPos, newDir ) };
 
-			if ( !dist[ newPos ].contains( newDir ) || newCost < dist[ newPos ][ newDir ] )
+			if ( !dist[ newPos ].contains( newDir ) || newCost <= dist[ newPos ][ newDir ] )
 			{
 				dist[ newPos ][ newDir ]	= newCost;
-				queue.emplace( newPos, newDir, newCost, newHeuristic );
+				auto	newVisited	{ current.fVisitedCells };
+				newVisited[ this->getVisitedVectorIndex( newPos ) ]	= true;
+				queue.emplace( newPos, newDir, newCost, newHeuristic, newVisited );
 			}
 		}
 	}
 
-	return -1; // No path found
+	return fVisitedCells.empty() ? -1 : fVisitedCells.begin()->first;
+}
 
+size_t Maze::getVisitedCellsCount() const
+{
+	return fVisitedCells.empty() ? 0 : std::ranges::count( fVisitedCells.begin()->second, true );
 }
 
 Maze::States Maze::getPossibleNeighbours(const State& current) const
@@ -140,14 +151,34 @@ Maze::States Maze::getPossibleNeighbours(const State& current) const
 	return possibleMoves;
 }
 
-int Maze::heuristic(const Point2D& a, const Point2D& b, std::byte dir)
+size_t Maze::getVisitedVectorSize() const
+{
+	return fSize.fX * fSize.fY;
+}
+
+size_t Maze::getVisitedVectorIndex(const Point2D& cell) const
+{
+	return cell.fY * fSize.fX + cell.fX;
+}
+
+int Maze::heuristic(const Point2D& cell, std::byte dir) const
 {
 	using namespace Direction;
 
-	const int	deltaX				{ std::abs( a.fX - b.fX ) };
-	const int	deltaY				{ std::abs( a.fY - b.fY ) };
+	const int	deltaX				{ std::abs( cell.fX - fEnd.fX ) };
+	const int	deltaY				{ std::abs( cell.fY - fEnd.fY ) };
 	const int	manhattanDistance	{ deltaX + deltaY };
+	// can be made more correct with more checks but this is still better than just Manhattan
 	const int	turn				{ deltaX != 0 && deltaY != 0 };
 
 	return manhattanDistance + turn * 1000;
+}
+
+void Maze::addNewVisited(Visited& a, const Visited& b)
+{
+	const auto	length	{ b.size() };
+	a.resize( length );
+	for ( size_t i = 0; i < length; i++ )
+		if ( b[ i ] )
+			a[ i ]	= true;
 }
