@@ -26,6 +26,9 @@
     <ClInclude Include="topoMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="10.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt">

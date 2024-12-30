@@ -32,10 +32,10 @@ void Guard::moveUntilObstacle(Map& map)
 	const size_t	lastD		{ map.size() - 1 };
 	const size_t	lastR		{ map.front().length() - 1 };
 
-	using namespace Direction;
-
 	switch ( fDir )
 	{
+		using enum Direction;
+
 		case U:
 		{
 			for ( ; fY >= 0; fY-- )
@@ -113,7 +113,7 @@ void Guard::moveUntilObstacle(Map& map)
 
 void Guard::turn()
 {
-	using namespace Direction;
+	using enum Direction;
 
 	if ( fDir == L )
 		fDir	= U;
@@ -128,9 +128,9 @@ void Guard::turn()
 	fTurns.push_back( t );
 }
 
-/*static*/ std::byte Guard::getDirection(char c)
+/*static*/ Direction Guard::getDirection(char c)
 {
-	using namespace Direction;
+	using enum Direction;
 
 	if ( c == '^' )
 		return U;
@@ -154,7 +154,7 @@ void Guard::findGuard(const Map& map)
 		const auto&	line	{ map[ i ] };
 
 		for ( size_t j = 0, width = line.length(); j < width; j++ )
-			if ( std::byte dir = getDirection( line[ j ] ); dir != Direction::None )
+			if ( Direction dir = getDirection( line[ j ] ); dir != Direction::None )
 			{
 				fX		= static_cast<int>( j );
 				fY		= static_cast<int>( i );

@@ -54,7 +54,7 @@ private:
 	class WideBox
 	{
 	public:
-		WideBox(size_t row, size_t col, const Map& map);
+				WideBox(size_t row, size_t col, const Map& map);
 
 		void	propagate(int dir);
 		bool	canMove(int dir);

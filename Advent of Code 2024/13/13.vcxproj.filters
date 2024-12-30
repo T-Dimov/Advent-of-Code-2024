@@ -21,15 +21,12 @@
     <ClCompile Include="clawMachine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="point2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clawMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="point2D.h">
+    <ClInclude Include="13.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

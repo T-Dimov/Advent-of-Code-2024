@@ -24,9 +24,8 @@ static Equation::Operand calculateTotalCalibrationResult(const std::vector<Equat
 	return std::ranges::fold_left_first( equations | std::views::transform( std::bind_back( &Equation::getPossibleResult, allowConcat ) ), std::plus {} ).value();
 }
 
-int main()
+void day07(std::string_view fileName)
 {
-	const auto	fileName	{ "input.txt" };
 	const auto	equations	{ readEquations( fileName ) };
 
 	std::cout << "Total calibration result: "						<< calculateTotalCalibrationResult( equations, false )	<< '\n';

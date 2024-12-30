@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-int main()
+void day24(std::string_view fileName)
 {
-	MonitoringDevice	monitoringDevice	{ "input.txt" };
+	MonitoringDevice	monitoringDevice	{ fileName };
 
 	std::cout << "Z wires output: " << monitoringDevice.calculateZ() << '\n';
 }

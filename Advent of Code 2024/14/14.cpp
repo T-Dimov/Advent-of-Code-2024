@@ -2,15 +2,19 @@
 
 #include <iostream>
 
-int main()
+void day14part1(std::string_view fileName)
 {
-	Space	testSpace	{ "test.txt", { 11, 7 } };
-	Space	space		{ "input.txt", { 101, 103 } };
-	Space	space2		{ "input.txt", { 101, 103 } };
+	Space	space	{ fileName, { 101, 103 } };
 
 	std::cout << "Safety factor after 100 second: " << space.calculateSafetyFactorAfter( 100 ) << '\n';
-	const int	searchStart { 0 };
-	space2.calculateSafetyFactorAfter( searchStart );
-	std::cout << "Easter egg after " << searchStart + space2.findSpaceWithFrameOfRobots() << " seconds\n";
-	space2.printGrid();
+}
+
+void day14part2(std::string_view fileName)
+{
+	Space		space		{ fileName, { 101, 103 } };
+
+	const int	searchStart	{ 0 };
+	space.calculateSafetyFactorAfter( searchStart );
+	std::cout << "Easter egg after " << searchStart + space.findSpaceWithFrameOfRobots() << " seconds\n";
+	space.printGrid();
 }

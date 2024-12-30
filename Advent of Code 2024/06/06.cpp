@@ -1,3 +1,5 @@
+#include "06.h"
+
 #include "guard.h"
 
 #include <iostream>
@@ -68,11 +70,9 @@ static size_t countWaysOfCreatingLoop(const Map& map)
 	return count;
 }
 
-int main()
+void day06(std::string_view fileName)
 {
-	const auto	fileName	{ "input.txt" };
-
-	const Map	map			{ readMap( fileName ) };
+	const Map	map	{ readMap( fileName ) };
 
 	std::cout << "Number of visited positions: "				<< countVisitedPositions( map )		<< '\n';
 	std::cout << "Number of ways to put the guard in a loop: "	<< countWaysOfCreatingLoop( map )	<< '\n';

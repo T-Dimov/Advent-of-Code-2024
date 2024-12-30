@@ -2,17 +2,18 @@
 
 #include <iostream>
 
-int main()
+void day09part1(std::string_view fileName)
 {
-	const auto	fileName	{ "input.txt" };
-
 	FileSystem	fileSystem	{ fileName };
 	fileSystem.compactFiles();
 
 	std::cout << "Compacted file system checksum: " << fileSystem.calculateContinuousChecksum() << '\n';
+}
 
-	FileSystem	fileSystem2	{ fileName };
-	fileSystem2.moveFiles();
+void day09part2(std::string_view fileName)
+{
+	FileSystem	fileSystem	{ fileName };
+	fileSystem.moveFiles();
 
-	std::cout << "Compacted file system checksum: " << fileSystem2.calculateNonFragmentedChecksum() << '\n';
+	std::cout << "Compacted file system checksum: " << fileSystem.calculateNonFragmentedChecksum() << '\n';
 }

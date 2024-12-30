@@ -34,5 +34,8 @@
     <ClInclude Include="monitoringDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="24.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

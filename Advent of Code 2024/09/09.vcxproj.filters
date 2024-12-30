@@ -26,6 +26,9 @@
     <ClInclude Include="fileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="09.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt">

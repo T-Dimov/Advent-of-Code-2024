@@ -18,18 +18,15 @@
     <ClCompile Include="16.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="point2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="maze.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="point2D.h">
+    <ClInclude Include="maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="maze.h">
+    <ClInclude Include="16.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

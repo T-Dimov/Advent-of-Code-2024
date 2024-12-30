@@ -31,7 +31,7 @@ static size_t countPairs(std::string_view fileName)
 	return count;
 }
 
-int main()
+void day25(std::string_view fileName)
 {
-	std::cout << "Fitting pairs count: " << countPairs( "input.txt." ) << '\n';
+	std::cout << "Fitting pairs count: " << countPairs( fileName ) << '\n';
 }

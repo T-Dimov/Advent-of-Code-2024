@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="06.cpp">
+    <ClCompile Include="guard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="guard.cpp">
+    <ClCompile Include="06.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,6 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="guard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="06.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

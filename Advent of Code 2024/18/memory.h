@@ -39,7 +39,7 @@ private:
 	size_t			getVisitedVectorSize() const;
 	size_t			getVisitedVectorIndex(const Point2D& cell) const;
 
-	int				heuristic(const Point2D& cell) const;
+	int64_t			heuristic(const Point2D& cell) const;
 
 	static void		addNewVisited(Visited& a, const Visited& b);
 

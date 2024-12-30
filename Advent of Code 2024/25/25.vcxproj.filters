@@ -26,6 +26,9 @@
     <ClInclude Include="schematic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="25.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="test.txt">

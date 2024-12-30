@@ -21,9 +21,6 @@
     <ClCompile Include="keypads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="point2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cartesianForEach.h">
       <Filter>Header Files</Filter>
     </ClCompile>
@@ -40,7 +37,7 @@
     <ClInclude Include="keypads.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="point2D.h">
+    <ClInclude Include="21.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

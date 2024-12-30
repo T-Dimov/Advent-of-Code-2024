@@ -15,11 +15,11 @@ Map::Map(std::string_view fileName, bool wide)
 		fMap.push_back( line );
 	}
 
-	size_t	i	{ 1 };
+	int64_t	i	{ 1 };
 	while ( std::getline( input, line ).good() && !line.empty() )
 	{
 		if ( auto j = line.find( '@' ); j != std::string::npos )
-			fRobotPosition	= { j, i };
+			fRobotPosition	= { static_cast<int64_t>( j ), i };
 
 		fMap.push_back( line );
 		++i;
@@ -164,7 +164,7 @@ void Map::moveOnce(char dir)
 
 void Map::moveU()
 {
-	size_t	i		{ fRobotPosition.fY - 1 };
+	int64_t	i	{ fRobotPosition.fY - 1 };
 
 	if ( const char& cell { fMap[ i ][ fRobotPosition.fX ] }; cell == '.' )
 	{
@@ -192,7 +192,7 @@ void Map::moveU()
 
 void Map::moveD()
 {
-	size_t	i		{ fRobotPosition.fY + 1 };
+	int64_t	i	{ fRobotPosition.fY + 1 };
 
 	if ( const char& cell { fMap[ i ][ fRobotPosition.fX ] }; cell == '.' )
 	{
@@ -220,7 +220,7 @@ void Map::moveD()
 
 void Map::moveL()
 {
-	size_t	j		{ fRobotPosition.fX - 1 };
+	int64_t	j	{ fRobotPosition.fX - 1 };
 
 	if ( const char& cell { fMap[ fRobotPosition.fY ][ j ] }; cell == '.' )
 	{
@@ -243,7 +243,7 @@ void Map::moveL()
 
 void Map::moveR()
 {
-	size_t	j		{ fRobotPosition.fX + 1 };
+	int64_t	j	{ fRobotPosition.fX + 1 };
 
 	if ( const char& cell { fMap[ fRobotPosition.fY ][ j ] }; cell == '.' )
 	{
@@ -362,7 +362,7 @@ void Map::pushR(size_t j)
 
 void Map::searchAndPushWide(size_t i, int dir)
 {
-	WideBox	box	{ i, fRobotPosition.fX, *this };
+	WideBox	box	{ i, static_cast<size_t>( fRobotPosition.fX ), *this };
 	box.propagate( dir );
 
 	if ( box.canMove( dir ) )

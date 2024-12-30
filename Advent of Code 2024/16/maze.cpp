@@ -36,11 +36,11 @@ Maze::Maze(std::string_view fileName)
 size_t Maze::findLowestCostRoute() const
 {
 	std::priority_queue<State, std::vector<State>, std::greater<State>>	queue;
-	std::unordered_map<Point2D, std::unordered_map<std::byte, int>>		dist;
+	std::unordered_map<Point2D, std::unordered_map<Direction, int64_t>>	dist;
 
 	Visited	startVisited( this->getVisitedVectorSize() );
 	startVisited[ this->getVisitedVectorIndex( fStart ) ]	= true;
-	queue.emplace( fStart, Direction::R, 0, this->heuristic( fStart, Direction::R ), startVisited );
+	queue.emplace( fStart, Direction::R, 0, this->heuristic( fStart ), startVisited );
 	dist[ fStart ][ Direction::R ]	= 0;
 
 	while ( !queue.empty() )
@@ -58,8 +58,8 @@ size_t Maze::findLowestCostRoute() const
 
 		for ( const auto& [newPos, newDir, addCost, heuristic, _] : neighbours )
 		{
-			const int	newCost			{ current.fCost + addCost };
-			const int	newHeuristic	{ this->heuristic( newPos, newDir ) };
+			const int		newCost			{ current.fCost + addCost };
+			const int64_t	newHeuristic	{ this->heuristic( newPos ) };
 
 			if ( !dist[ newPos ].contains( newDir ) || newCost <= dist[ newPos ][ newDir ] )
 			{
@@ -161,15 +161,13 @@ size_t Maze::getVisitedVectorIndex(const Point2D& cell) const
 	return cell.fY * fSize.fX + cell.fX;
 }
 
-int Maze::heuristic(const Point2D& cell, std::byte dir) const
+int64_t Maze::heuristic(const Point2D& cell) const
 {
-	using namespace Direction;
-
-	const int	deltaX				{ std::abs( cell.fX - fEnd.fX ) };
-	const int	deltaY				{ std::abs( cell.fY - fEnd.fY ) };
-	const int	manhattanDistance	{ deltaX + deltaY };
+	const int64_t	deltaX				{ std::abs( cell.fX - fEnd.fX ) };
+	const int64_t	deltaY				{ std::abs( cell.fY - fEnd.fY ) };
+	const int64_t	manhattanDistance	{ deltaX + deltaY };
 	// can be made more correct with more checks but this is still better than just Manhattan
-	const int	turn				{ deltaX != 0 && deltaY != 0 };
+	const int		turn				{ deltaX != 0 && deltaY != 0 };
 
 	return manhattanDistance + turn * 1000;
 }

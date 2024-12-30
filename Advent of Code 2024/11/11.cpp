@@ -101,11 +101,9 @@ static size_t calculateNumberOfStoneAfterBlinks(const Numbers& numbers, size_t n
 	return std::ranges::fold_left_first( std::views::transform( numbers, std::bind_back( countDescendants, 0, numBlinks, hash ) ), std::plus {} ).value();
 }
 
-int main()
+void day11(std::string_view fileName)
 {
-	const auto	fileName	{ "input.txt" };
-
-	const auto	numbers		{ readNumbers( fileName ) };
+	const auto	numbers	{ readNumbers( fileName ) };
 	Hash		hash;
 
 	std::cout << "Number of stones after 25 blinks: " << calculateNumberOfStoneAfterBlinks( numbers, 25, hash ) << '\n';

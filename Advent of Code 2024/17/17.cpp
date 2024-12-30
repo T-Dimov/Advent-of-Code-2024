@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-int main()
+void day17(std::string_view fileName)
 {
-	const auto		fileName	{ "input.txt" };
-
-	Computer		computer	{ fileName };
+	Computer	computer	{ fileName };
 	computer.run();
+	std::cout << "Computer output: ";
 	computer.printOutput( std::cout );
+	std::cout << '\n';
 }

@@ -48,7 +48,7 @@ Memory::Memory(std::string_view fileName, const Point2D& size, size_t byteLimit)
 size_t Memory::findLowestCostRoute() const
 {
 	std::priority_queue<State, std::vector<State>, std::greater<State>>	queue;
-	std::unordered_map<Point2D, int>		dist;
+	std::unordered_map<Point2D, int64_t>								dist;
 
 	Visited	startVisited( this->getVisitedVectorSize() );
 	startVisited[ this->getVisitedVectorIndex( fStart ) ]	= true;
@@ -70,8 +70,8 @@ size_t Memory::findLowestCostRoute() const
 
 		for ( const auto& [newPos, addCost, heuristic, _] : neighbours )
 		{
-			const int	newCost			{ current.fCost + addCost };
-			const int	newHeuristic	{ this->heuristic( newPos ) };
+			const int		newCost			{ current.fCost + addCost };
+			const int64_t	newHeuristic	{ this->heuristic( newPos ) };
 
 			if ( !dist.contains( newPos ) || newCost < dist[ newPos ] )
 			{
@@ -146,13 +146,9 @@ size_t Memory::getVisitedVectorIndex(const Point2D& cell) const
 	return cell.fY * fSize.fX + cell.fX;
 }
 
-int Memory::heuristic(const Point2D& cell) const
+int64_t Memory::heuristic(const Point2D& cell) const
 {
-	const int	deltaX				{ std::abs( cell.fX - fEnd.fX ) };
-	const int	deltaY				{ std::abs( cell.fY - fEnd.fY ) };
-	const int	manhattanDistance	{ deltaX + deltaY };
-
-	return manhattanDistance;
+	return cell.manhattanDistanceTo( fEnd );
 }
 
 /*static*/ void Memory::addNewVisited(Visited& a, const Visited& b)

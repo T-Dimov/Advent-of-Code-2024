@@ -54,10 +54,8 @@ static Machines readMachines(std::string_view fileName)
 	return machines;
 }
 
-int main()
+void day13(std::string_view fileName)
 {
-	const auto	fileName	{ "input.txt" };
-
 	auto		machines	{ readMachines( fileName ) };
 
 	const auto	tokens		{ std::ranges::fold_left_first( std::views::transform( machines, std::mem_fn( &ClawMachine::calculateLowestCostToReachTarget ) ), std::plus {} ).value() };

@@ -34,5 +34,8 @@
     <ClInclude Include="equation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="07.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,10 +2,8 @@
 
 #include <iostream>
 
-int main()
+void day10(std::string_view fileName)
 {
-	const auto	fileName	{ "input.txt" };
-
 	TopoMap	topoMap	{ fileName };
 	auto [scoresSum, ratingsSum]	= topoMap.getTrailheadsScoresSumAndRatingsSum();
 

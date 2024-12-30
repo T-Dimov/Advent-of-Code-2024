@@ -118,10 +118,8 @@ static std::pair<size_t, size_t> calculateFencingPrice(const Map& map)
 			std::ranges::fold_left_first( regionsSideFences | std::views::values | std::views::transform( calculateRegionFencingPrice ), std::plus {} ).value() };
 }
 
-int main()
+void day12(std::string_view fileName)
 {
-	const auto	fileName					{ "input.txt" };
-
 	const auto	map							{ readMap( fileName ) };
 	const auto&	[plotFences, sideFences]	{ calculateFencingPrice( map ) };
 

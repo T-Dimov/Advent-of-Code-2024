@@ -21,15 +21,12 @@
     <ClCompile Include="memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="point2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="point2D.h">
+    <ClInclude Include="18.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
