@@ -2,7 +2,7 @@
 
 int main()
 {
-	day01part1	( "../01/input.txt" );
+	/*day01part1	( "../01/input.txt" );
 	day01part2	( "../01/input.txt" );
 
 	day02		( "../02/input.txt" );
@@ -43,11 +43,13 @@ int main()
 
 	day17		( "../17/input.txt" );
 
-	day18		( "../18/input.txt" );
+	day18		( "../18/input.txt" );*/
+
+	day19		( "../19/test.txt" );
 
 	//day21		( "../21/input.txt" );
 
-	day24		( "../24/input.txt" );
+	/*day24		( "../24/input.txt" );
 
-	day25		( "../25/input.txt" );
+	day25		( "../25/input.txt" );*/
 }
